@@ -22,6 +22,11 @@ from django.conf import settings
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("accounts/", include("allauth.urls")),
+    # include custom app paths
+    path("", include("apps.accounts.urls")),
+    path("campaigns/", include("apps.campaigns.urls")),
+    path("personas/", include("apps.personas.urls")),
+    path("posts/", include("apps.posts.urls")),
 ]
 
 if settings.DEBUG:

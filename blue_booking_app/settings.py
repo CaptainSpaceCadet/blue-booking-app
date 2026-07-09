@@ -46,6 +46,11 @@ INSTALLED_APPS = [
     "allauth.socialaccount.providers.google",
     "allauth.socialaccount.providers.apple",
     "allauth.socialaccount.providers.facebook",
+    # Custom Apps
+    "apps.accounts",
+    "apps.campaigns",
+    "apps.personas",
+    "apps.posts",
 ]
 
 if DEBUG:
