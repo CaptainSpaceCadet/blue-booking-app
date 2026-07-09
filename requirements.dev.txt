@@ -1,0 +1,6 @@
+pytest>=8.0
+pytest-django>=4.5
+pylint>=3.0,<4.0
+pylint-django>=2.5
+black>=24.0
+coverage>=7.0
