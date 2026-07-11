@@ -8,3 +8,107 @@
   * the scope of this path.
   */
 @source "../../../**/*.{html,py,js}";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* Headings */
+  h1 {
+    @apply text-4xl font-bold;
+  }
+  h2 {
+    @apply text-3xl font-bold;
+  }
+  h3 {
+    @apply text-2xl font-bold;
+  }
+  h4 {
+    @apply text-xl font-bold;
+  }
+  h5 {
+    @apply text-lg font-bold;
+  }
+  h6 {
+    @apply text-base font-bold;
+  }
+
+  /* Links */
+  a {
+    @apply text-blue-600 underline;
+  }
+  a:visited {
+    @apply text-purple-600;
+  }
+  a:hover {
+    @apply text-blue-800;
+  }
+
+  /* Lists */
+  ul {
+    @apply list-disc pl-5;
+  }
+  ol {
+    @apply list-decimal pl-5;
+  }
+
+  /* Text formatting */
+  strong, b {
+    @apply font-bold;
+  }
+  em, i {
+    @apply italic;
+  }
+  u {
+    @apply underline;
+  }
+
+  /* Block elements */
+  blockquote {
+    @apply border-l-4 border-gray-300 pl-4 italic;
+  }
+  hr {
+    @apply border-t border-gray-300 my-4;
+  }
+
+  /* Tables */
+  table {
+    @apply border-collapse w-full;
+  }
+  th {
+    @apply border border-gray-300 px-4 py-2 text-left font-bold bg-gray-100;
+  }
+  td {
+    @apply border border-gray-300 px-4 py-2;
+  }
+
+  /* Forms */
+  input, textarea, select {
+    @apply border border-gray-300 rounded px-3 py-2;
+  }
+  button {
+    @apply bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600;
+  }
+
+  /* Images */
+  img {
+    @apply max-w-full h-auto;
+  }
+
+  /* Paragraph spacing */
+  p {
+    @apply mb-4;
+  }
+
+  /* Additional semantic elements */
+  pre, code {
+    @apply bg-gray-100 rounded px-1 py-0.5 font-mono text-sm;
+  }
+  pre {
+    @apply p-4 overflow-x-auto;
+  }
+  pre code {
+    @apply bg-transparent p-0;
+  }
+}
