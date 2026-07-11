@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "allauth.socialaccount.providers.apple",
     "allauth.socialaccount.providers.facebook",
     # Custom Apps
+    "apps.core",
     "apps.accounts",
     "apps.campaigns",
     "apps.personas",
@@ -88,6 +89,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "django.template.context_processors.request",
+                "apps.accounts.context_processors.user_profile",
             ],
         },
     },
@@ -157,7 +159,7 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 TAILWIND_APP_NAME = "theme"
 
 # Redirect after login
-LOGIN_REDIRECT_URL = "/secret-view/"
+LOGIN_REDIRECT_URL = "/dashboard/"
 
 # all-auth
 ACCOUNT_EMAIL_VERIFICATION = "optional"

@@ -26,7 +26,8 @@ urlpatterns = [
     path("campaigns/", include("apps.campaigns.urls")),
     path("personas/", include("apps.personas.urls")),
     path("posts/", include("apps.posts.urls")),
-    path("", include("apps.accounts.urls")),  # Moved to the end
+    path("", include("apps.accounts.urls")),
+    path("", include("apps.core.urls")),
 ]
 
 if settings.DEBUG:
