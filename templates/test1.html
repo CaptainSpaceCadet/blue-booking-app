@@ -1,11 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Test1</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}Open Page{% endblock %}
+
+{% block content %}
     {% include 'partials/navbar.html' %}
-    <h1>Test 1</h1>
-</body>
-</html>
+    <h1 class="text-green-100">Test 1</h1>
+{% endblock %}

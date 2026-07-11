@@ -1,12 +1,18 @@
 {% load django_htmx %}
+{% load static tailwind_tags %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{% block title %}Title{% endblock %}</title>
     {% htmx_script %}
+    {% tailwind_css %}
 </head>
 <body hx-headers='{"x-csrftoken": "{{ csrf_token }}"}'>
-
+    {% block content %}
+    This is the default page!
+    {% endblock %}
 </body>
 </html>
