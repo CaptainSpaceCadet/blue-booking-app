@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "allauth.socialaccount.providers.apple",
     "allauth.socialaccount.providers.facebook",
     # Custom Apps
+    "apps.core",
     "apps.accounts",
     "apps.campaigns",
     "apps.personas",
@@ -88,9 +89,15 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "django.template.context_processors.request",
+                "apps.accounts.context_processors.user_profile",
             ],
         },
     },
+]
+
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
 ]
 
 WSGI_APPLICATION = "blue_booking_app.wsgi.application"
@@ -142,6 +149,19 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = "static/"
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
 
 # Django-Tailwind
 TAILWIND_APP_NAME = "theme"
+
+# Redirect after login
+LOGIN_REDIRECT_URL = "/dashboard/"
+
+# all-auth
+ACCOUNT_EMAIL_VERIFICATION = "optional"
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+ACCOUNT_SIGNUP_FORM_CLASS = "apps.accounts.forms.CustomSignupForm"

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Open Page{% endblock %}
+
+{% block content %}
+    {% include 'partials/navbar.html' %}
+    <h1 class="text-green-700">Dashboard</h1>
+    <div id="change-password-settings"
+         hx-get="{% url 'accounts:password_change_partial' %}"
+         hx-trigger="load">
+    uh oh!
+    </div>
+{% endblock %}

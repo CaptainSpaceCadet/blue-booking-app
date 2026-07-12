@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Blue Booking{% endblock %}
+
+{% block content %}
+    {% include 'partials/navbar.html' %}
+        <header>
+            <hgroup>
+                <h1>Bluebooking!!!</h1>
+                <h2>Make the traditional digital</h2>
+            </hgroup>
+        </header>
+
+    <main>
+        {% if user.is_authenticated and user_profile %}
+        <aside>
+            You are logged in as: {{ user_profile.display_name }} ({{ user.username }})<br>
+            <a href="/dashboard">Go to dashboard-></a>
+        </aside>
+        {% endif %}
+    </main>
+
+    <footer>
+
+    </footer>
+{% endblock %}
