@@ -12,6 +12,7 @@
 #	- Python (language used in project)
 # - Runtime Environment
 # 	- Node.js
+#	- WebPack
 
 # ========================================================================
 #       Platforms
@@ -458,9 +459,6 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 
-# Additional Stuff
-webpack-stats.json
-
 # ========================================================================
 #       Runtime Environment
 # ========================================================================
@@ -610,3 +608,7 @@ dist
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
+
+# Additional Stuff
+webpack-stats.json
+assets/webpack_bundles/
