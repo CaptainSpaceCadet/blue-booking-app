@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "allauth.socialaccount.providers.google",
     "allauth.socialaccount.providers.apple",
     "allauth.socialaccount.providers.facebook",
+    "webpack_loader",
     # Custom Apps
     "apps.core",
     "apps.accounts",
@@ -151,6 +152,8 @@ USE_TZ = True
 STATIC_URL = "static/"
 STATICFILES_DIRS = [
     BASE_DIR / "static",
+    # for WebPack
+    BASE_DIR / "assets",
 ]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
@@ -165,3 +168,14 @@ LOGIN_REDIRECT_URL = "/dashboard/"
 ACCOUNT_EMAIL_VERIFICATION = "optional"
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 ACCOUNT_SIGNUP_FORM_CLASS = "apps.accounts.forms.CustomSignupForm"
+
+# Web Pack
+WEBPACK_LOADER = {
+    "DEFAULT": {
+        "BUNDLE_DIR_NAME": "webpack_bundles/",
+        "CACHE": not DEBUG,
+        "STATS_FILE": BASE_DIR / "webpack-stats.json",
+        "POLL_INTERVAL": 0.1,
+        "IGNORE": [r".+\.hot-update.js", r".+\.map"],
+    }
+}
