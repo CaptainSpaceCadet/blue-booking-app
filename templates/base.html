@@ -1,5 +1,6 @@
 {% load django_htmx %}
 {% load static tailwind_tags %}
+{% load render_bundle from webpack_loader %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,5 +15,7 @@
     {% block content %}
     This is the default page!
     {% endblock %}
+
+    {% render_bundle 'main' 'js' %}
 </body>
 </html>
