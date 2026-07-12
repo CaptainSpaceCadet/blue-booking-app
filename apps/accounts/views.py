@@ -3,6 +3,7 @@ from allauth.account.views import PasswordChangeView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.shortcuts import render
+from django.utils.decorators import method_decorator
 
 
 def open_view(request):
@@ -23,7 +24,6 @@ def password_change_partial(request):
     )
 
 
-@login_required
 class CustomPasswordChangeView(PasswordChangeView):
     def get(self, request, *args, **kwargs):
         if request.htmx:
