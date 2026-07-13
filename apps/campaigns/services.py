@@ -67,7 +67,7 @@ def create_campaign(creator: UserProfile, title: str, description: str) -> Campa
     :return: The created Campaign
 
     :raises UserCampaignMembershipLimitReachedError: If the creator has maxed out their campaign membership limit
-    :raises CampaignTitleIsInvalidError: If the title is greater than 100 characters
+    :raises CampaignTitleIsInvalidError: If the title is greater than 100 characters, or blank
     :raises CampaignDescriptionIsInvalidError: If the description is more than 500 characters
     """
 
@@ -80,6 +80,9 @@ def create_campaign(creator: UserProfile, title: str, description: str) -> Campa
         raise CampaignDescriptionIsInvalidError(
             "Description must be less than 500 characters."
         )
+
+    if not title.strip():
+        raise CampaignTitleIsInvalidError("Title must not be blank.")
 
     campaign = Campaign.objects.create(title=title, description=description)
 

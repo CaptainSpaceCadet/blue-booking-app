@@ -582,11 +582,11 @@ class TestEdgeCases:
 
     def test_empty_string_handling(self, user_profile):
         """Test handling of empty strings for title and description."""
-        # Empty title should be allowed (or should it?)
-        campaign = services.create_campaign(
-            creator=user_profile, title="", description="Description"  # Empty string
-        )
-        assert campaign.title == ""
+        # Empty title should not be allowed
+        with pytest.raises(CampaignTitleIsInvalidError):
+            campaign = services.create_campaign(
+                creator=user_profile, title="", description="Description"
+            )  # Empty string
 
         # Empty description should be allowed
         campaign = services.create_campaign(
