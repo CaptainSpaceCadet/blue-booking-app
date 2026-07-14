@@ -1,8 +1,8 @@
 <form method="post"
       action="{% url 'campaigns:create-campaign' %}"
       hx-post="{% url 'campaigns:create-campaign' %}"
-      hx-target="#create-campaign-form"
-      hx-swap="innerHTML"
+      hx-target="this"
+      hx-swap="outerHTML"
       hx-trigger="submit"
 >
     {% csrf_token %}
