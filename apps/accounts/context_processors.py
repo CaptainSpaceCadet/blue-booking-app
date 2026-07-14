@@ -9,7 +9,7 @@ def user_profile(request):
         try:
             profile = request.user.profile
             context["user_profile"] = profile
-        except User.DoesNotExist:
+        except UserProfile.DoesNotExist:
             context["user_profile"] = None
     else:
         context["user_profile"] = None
