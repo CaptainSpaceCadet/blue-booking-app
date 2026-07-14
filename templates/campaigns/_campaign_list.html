@@ -1,0 +1,8 @@
+<h2>Campaign List</h2>
+<ul>
+{% for campaign in campaign_list %}
+    <li>{{ campaign.title }}</li>
+{% empty %}
+    <li>There are no campaigns in your list.</li>
+{% endfor %}
+</ul>

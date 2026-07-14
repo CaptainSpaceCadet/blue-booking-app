@@ -7,5 +7,11 @@ class UserProfile(models.Model):
 
     display_name = models.CharField(blank=True, null=False, max_length=100)
 
-    def __str__(self):
+    campaigns = models.ManyToManyField(
+        "campaigns.Campaign",
+        through="campaigns.CampaignMembership",
+        related_name="members",
+    )
+
+    def __str__(self) -> str:
         return f"{self.display_name}({self.user.username})'s profile"

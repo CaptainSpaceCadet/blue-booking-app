@@ -179,3 +179,7 @@ WEBPACK_LOADER = {
         "IGNORE": [r".+\.hot-update.js", r".+\.map"],
     }
 }
+
+# Custom Environmental Variables
+CAMPAIGN_MEMBER_LIMIT = 25  # limit on how many member can a campaign have
+USER_CAMPAIGN_LIMIT = 25  # limit on how many campaigns can a user belong to
