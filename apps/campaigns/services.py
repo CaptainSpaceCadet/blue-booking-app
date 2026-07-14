@@ -55,7 +55,9 @@ def is_campaign_membership_full(campaign: Campaign) -> bool:
 
 
 @transaction.atomic
-def create_campaign(creator: UserProfile, title: str, description: str) -> Campaign:
+def create_campaign(
+    creator: UserProfile, title: str, description: str | None
+) -> Campaign:
     """
     Create a new campaign, and add the creator to the campaign membership list as a GM.
 
@@ -76,7 +78,7 @@ def create_campaign(creator: UserProfile, title: str, description: str) -> Campa
 
     if len(title) > 100:
         raise CampaignTitleIsInvalidError("Title must be less than 100 characters.")
-    if len(description) > 500:
+    if description is not None and len(description) > 500:
         raise CampaignDescriptionIsInvalidError(
             "Description must be less than 500 characters."
         )

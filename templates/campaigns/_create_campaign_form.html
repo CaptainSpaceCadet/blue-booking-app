@@ -1,0 +1,11 @@
+<form method="post"
+      action="{% url 'campaigns:create-campaign' %}"
+      hx-post="{% url 'campaigns:create-campaign' %}"
+      hx-target="#create-campaign-form"
+      hx-swap="innerHTML"
+      hx-trigger="submit"
+>
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Create Campaign" />
+</form>

@@ -5,9 +5,25 @@
 {% block content %}
     {% include 'partials/navbar.html' %}
     <h1 class="text-green-700">Dashboard</h1>
-    <div id="change-password-settings"
+
+{% comment %}    <div id="change-password-settings"
          hx-get="{% url 'accounts:password_change_partial' %}"
          hx-trigger="load">
     uh oh!
-    </div>
+    </div>{% endcomment %}
+    <section id="campaign-list"
+             hx-get="{% url 'campaigns:campaign-list' %}"
+             hx-trigger="load, campaignCreated from:body"
+    >
+        Loading campaigns...
+    </section>
+
+    <section id="create-campaign-form"
+             hx-get="{% url 'campaigns:create-campaign' %}"
+             hx-trigger="load"
+             hx-target="this"
+             hx-swap="innerHTML"
+    >
+        Loading create campaign form...
+    </section>
 {% endblock %}
