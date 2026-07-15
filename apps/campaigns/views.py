@@ -11,6 +11,10 @@ from django_htmx.http import HttpResponseClientRefresh
 
 from apps.accounts.models import UserProfile
 from apps.campaigns import services
+from apps.campaigns.decorators import (
+    members_only,
+    members_only_pass_campaign_and_membership,
+)
 from apps.campaigns.forms import CreateCampaignForm
 from apps.campaigns.models import Campaign
 from apps.campaigns.services import create_campaign
@@ -101,3 +105,41 @@ def create_campaign(request):
     return HttpResponseBadRequest(
         "Request methods to the create campaign endpoint must be GET or POST"
     )
+
+
+@members_only_pass_campaign_and_membership("id")
+def campaign_page(request, id, campaign, membership):
+    """
+    Returns the campaign page HTML page. The campaign page acts as a dashboard for a campaign.
+
+    This view handles only GET requests. It expects HTML requests and returns full HTML pages that inherit from 'base.html'.
+
+    It renders the page via "campaigns/campaign_page.html" template.
+
+    - **GET**: Returns the campaign page HTML page
+
+    :param request: HttpRequest
+    :param id: The id of the campaign
+    :param membership: Populated by @members_only_pass_campaign_and_membership
+    :param campaign: Populated by @members_only_pass_campaign_and_membership
+    :return: The campaign HTML page
+
+    :raises Http400: Bad request, occurs if the method is not GET request, or it is a HTMX request.
+    :raises Http404: Not found, occurs if the campaign does not exist or the user doesn't have permission to access it.
+
+    **Security Notes**:
+        - Http404 is raised by @members_only decorator
+        - Http404 is given in cases where the user doesn't have permission to access a campaign and when the campaign doesn't exist to prevent information leakage.
+    """
+
+    if request.htmx:
+        return HttpResponseBadRequest(
+            "Requests to the campaign-page endpoint must not be HTMX requests."
+        )
+
+    if request.method != "GET":
+        return HttpResponseBadRequest(
+            "Requests to the campaign-page endpoint must be GET requests."
+        )
+
+    return render(request, "campaigns/campaign_page.html", {"campaign": campaign})

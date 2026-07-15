@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+
+{% block title %}{{ campaign.title }}{% endblock %}
+
+{% block content %}
+    <h1 class="text-blue-100">{{ campaign.title }}</h1>
+    <p>{{ campaign.description }}</p>
+{% endblock %}
