@@ -1,7 +1,7 @@
 <h2>Campaign List</h2>
 <ul>
 {% for campaign in campaign_list %}
-    <li>{{ campaign.title }}</li>
+    <li><a href="{% url 'campaigns:campaign-page' campaign.id %}">{{ campaign.title }}</a></li>
 {% empty %}
     <li>There are no campaigns in your list.</li>
 {% endfor %}
