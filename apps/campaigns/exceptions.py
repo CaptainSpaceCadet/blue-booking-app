@@ -31,25 +31,25 @@ class UserNotMemberError(CampaignServiceError):
     pass
 
 
-class UserAlreadyPlayerError(CampaignServiceError):
+class MemberAlreadyPlayerError(CampaignServiceError):
     """Raised when a member attempts to be demoted to a PLAYER, but they are already a PLAYER."""
 
     pass
 
 
-class UserAlreadyGMError(CampaignServiceError):
+class MemberAlreadyGMError(CampaignServiceError):
     """Raised when a member attempts to be promoted to a GM, but they are already GM."""
 
     pass
 
 
-class UserNotGMError(CampaignServiceError):
+class MemberNotGMError(CampaignServiceError):
     """Raised when a member is expected to be a GM and is not, frequently used regarding permissions."""
 
     pass
 
 
-class UserNotSoleGMError(CampaignServiceError):
+class MemberNotSoleGMError(CampaignServiceError):
     """Raised when a member tries to do an action which requires full control over the campaign (such as delete it) but the user is not the sole GM."""
 
     pass
