@@ -10,12 +10,12 @@ from apps.campaigns import services
 from apps.campaigns.exceptions import (
     UserCampaignMembershipLimitReachedError,
     UserNotMemberError,
-    UserNotSoleGMError,
+    MemberNotSoleGMError,
     LastGMCannotLeaveError,
     CampaignMembershipFullError,
     UserAlreadyMemberError,
-    UserAlreadyGMError,
-    UserAlreadyPlayerError,
+    MemberAlreadyGMError,
+    MemberAlreadyPlayerError,
     CampaignTitleIsInvalidError,
     CampaignDescriptionIsInvalidError,
 )
@@ -242,7 +242,7 @@ class TestDeleteCampaign:
             role=CampaignMembership.CampaignRoles.GM,
         )
 
-        with pytest.raises(UserNotSoleGMError) as exc_info:
+        with pytest.raises(MemberNotSoleGMError) as exc_info:
             services.delete_campaign(deleter=user_profile, campaign=campaign)
 
         assert "must be the only GM" in str(exc_info.value)
@@ -438,7 +438,7 @@ class TestPromoteToGM:
 
     def test_promote_to_gm_already_gm(self, user_profile, campaign):
         """Raise error when user is already a GM."""
-        with pytest.raises(UserAlreadyGMError):
+        with pytest.raises(MemberAlreadyGMError):
             services.promote_to_gm(member=user_profile, campaign=campaign)
 
 
@@ -487,7 +487,7 @@ class TestDemoteToPlayer:
         services.demote_to_player(member=user_profile, campaign=campaign)
 
         # Try to demote again
-        with pytest.raises(UserAlreadyPlayerError):
+        with pytest.raises(MemberAlreadyPlayerError):
             services.demote_to_player(member=user_profile, campaign=campaign)
 
     def test_demote_last_gm_to_player(self, user_profile, campaign):
