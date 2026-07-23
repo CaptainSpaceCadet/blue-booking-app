@@ -2,6 +2,8 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import models
 
+from apps.personas.models import Persona
+
 
 class Campaign(models.Model):
     title = models.CharField(max_length=100, blank=False)
@@ -67,3 +69,18 @@ class CampaignMembership(models.Model):
 
         if is_last_member:
             campaign.delete()
+
+    def member_persona(self) -> Persona | None:
+        """Get the persona that represents the real member."""
+
+        # Returns the first persona that is a GM or PLAYER
+        # Before the member persona is created, this function will return None
+        # Once a member has a member persona, there should only even be one member persona
+        # If there are multiple personas, it is an error
+
+        member_personas = self.personas.filter(
+            type__in=[Persona.PersonaType.GM, Persona.PersonaType.PLAYER]
+        )
+        assert len(member_personas) <= 1
+
+        return member_personas.first()
