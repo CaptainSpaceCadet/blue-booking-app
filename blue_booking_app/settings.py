@@ -183,3 +183,4 @@ WEBPACK_LOADER = {
 # Custom Environmental Variables
 CAMPAIGN_MEMBER_LIMIT = 25  # limit on how many member can a campaign have
 USER_CAMPAIGN_LIMIT = 25  # limit on how many campaigns can a user belong to
+PLAYER_PERSONA_LIMIT = 10  # limit on how many personas a player can have
