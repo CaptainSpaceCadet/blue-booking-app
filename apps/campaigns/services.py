@@ -13,12 +13,12 @@ from apps.campaigns.models import CampaignMembership, Campaign
 from apps.campaigns.exceptions import (
     UserCampaignMembershipLimitReachedError,
     UserNotMemberError,
-    UserNotSoleGMError,
+    MemberNotSoleGMError,
     LastGMCannotLeaveError,
     CampaignMembershipFullError,
     UserAlreadyMemberError,
-    UserAlreadyGMError,
-    UserAlreadyPlayerError,
+    MemberAlreadyGMError,
+    MemberAlreadyPlayerError,
     CampaignTitleIsInvalidError,
     CampaignDescriptionIsInvalidError,
 )
@@ -54,14 +54,15 @@ def is_campaign_membership_full(campaign: Campaign) -> bool:
     return member_count >= CAMPAIGN_MEMBER_LIMIT
 
 
+# TODO: when adding initial gm create member persona for them
 @transaction.atomic
 def create_campaign(
     creator: UserProfile, title: str, description: str | None
 ) -> Campaign:
     """
-    Create a new campaign, and add the creator to the campaign membership list as a GM.
+    Create a new campaign and add the creator to the campaign membership list as a GM.
 
-    Campaign cannot be created, if creator cannot join a new campaign.
+    Campaign cannot be created if creator cannot join a new campaign.
 
     :param creator: UserProfile of the creator
     :param title: Title of the campaign, it must be less than 100 characters
@@ -107,7 +108,7 @@ def delete_campaign(deleter: UserProfile, campaign: Campaign) -> None:
     :param campaign: Campaign of the campaign to delete
 
     :raises UserNotMemberError: If the deleter is not a member of the campaign
-    :raises UserNotSoleGMError: If the deleter is not a sole GM of the campaign
+    :raises MemberNotSoleGMError: If the deleter is not a sole GM of the campaign
     """
 
     if not CampaignMembership.objects.filter(user=deleter, campaign=campaign).exists():
@@ -116,11 +117,14 @@ def delete_campaign(deleter: UserProfile, campaign: Campaign) -> None:
     deleter_membership = CampaignMembership.objects.get(user=deleter, campaign=campaign)
 
     if not deleter_membership.is_last_gm():
-        raise UserNotSoleGMError("To delete a campaign, the user must be the only GM.")
+        raise MemberNotSoleGMError(
+            "To delete a campaign, the user must be the only GM."
+        )
 
     campaign.delete()
 
 
+# TODO: when joining a campaign create member persona for the joiner
 @transaction.atomic
 def join_campaign(user: UserProfile, campaign: Campaign) -> CampaignMembership:
     """
@@ -152,6 +156,7 @@ def join_campaign(user: UserProfile, campaign: Campaign) -> CampaignMembership:
     return membership
 
 
+# TODO: handle retiring personas when leaving a campaign
 @transaction.atomic
 def leave_campaign(member: UserProfile, campaign: Campaign) -> None:
     """
@@ -174,16 +179,17 @@ def leave_campaign(member: UserProfile, campaign: Campaign) -> None:
     membership.delete()
 
 
+# TODO: handle promoting member persona when promoting to GM
 @transaction.atomic
 def promote_to_gm(member: UserProfile, campaign: Campaign) -> None:
     """
-    Promote member that has the PLAYER role to the GM role.
+    Promote the member that has the PLAYER role to the GM role.
 
     :param member: UserProfile of the member to promote
     :param campaign: Campaign of the campaign
 
     :raises UserNotMemberError: If the member is not a member of the campaign
-    :raises UserAlreadyGMError: If the member is already a GM of the campaign
+    :raises MemberAlreadyGMError: If the member is already a GM of the campaign
     """
 
     if not CampaignMembership.objects.filter(user=member, campaign=campaign).exists():
@@ -192,16 +198,17 @@ def promote_to_gm(member: UserProfile, campaign: Campaign) -> None:
     membership = CampaignMembership.objects.get(user=member, campaign=campaign)
 
     if membership.role == CampaignMembership.CampaignRoles.GM:
-        raise UserAlreadyGMError()
+        raise MemberAlreadyGMError()
 
     membership.role = CampaignMembership.CampaignRoles.GM
     membership.save()
 
 
+# TODO: handle demoting member persona and transferring retired persona to the other GM
 @transaction.atomic
 def demote_to_player(member: UserProfile, campaign: Campaign) -> None:
     """
-    Demote member that has the role of GM to the PLAYER role.
+    Demote the member that has the role of GM to the PLAYER role.
 
     If the member is the last GM in the campaign, they cannot be demoted as a campaign cannot be left without a GM.
 
@@ -209,7 +216,7 @@ def demote_to_player(member: UserProfile, campaign: Campaign) -> None:
     :param campaign: Campaign of the campaign
 
     :raises UserNotMemberError: If the member is not a member of the campaign
-    :raises UserAlreadyPlayerError: If the member is already a PLAYER of the campaign
+    :raises MemberAlreadyPlayerError: If the member is already a PLAYER of the campaign
     :raises LastGMCannotLeaveError: If the member is the last GM of the campaign, they can't be demoted
     """
 
@@ -219,7 +226,7 @@ def demote_to_player(member: UserProfile, campaign: Campaign) -> None:
     membership = CampaignMembership.objects.get(user=member, campaign=campaign)
 
     if membership.role == CampaignMembership.CampaignRoles.PLAYER:
-        raise UserAlreadyPlayerError()
+        raise MemberAlreadyPlayerError()
 
     if membership.is_last_gm():
         raise LastGMCannotLeaveError()
