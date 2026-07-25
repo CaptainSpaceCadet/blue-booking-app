@@ -581,7 +581,6 @@ class TestDemotePersonasToPlayer:
         assert len(retired) >= 0  # Just checking it doesn't raise
 
 
-# Additional test for member_persona edge cases
 class TestMemberPersonaMethod:
     @override_settings(PLAYER_PERSONA_LIMIT=2)
     def test_member_persona_returns_none_when_no_member_persona(self, gm_membership):
