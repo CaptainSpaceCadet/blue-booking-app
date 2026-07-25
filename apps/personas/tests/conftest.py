@@ -1,7 +1,6 @@
 # tests/personas/fixtures.py
 import pytest
 from django.contrib.auth.models import User
-from django.test import override_settings
 
 from apps.accounts.models import UserProfile
 from apps.campaigns.models import Campaign, CampaignMembership
