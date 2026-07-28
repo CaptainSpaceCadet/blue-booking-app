@@ -32,4 +32,4 @@ class Persona(models.Model):
         return self.name
 
     def is_member_type(self) -> bool:
-        return type == self.PersonaType.PLAYER or type == self.PersonaType.GM
+        return self.type == self.PersonaType.PLAYER or self.type == self.PersonaType.GM
