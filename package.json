@@ -22,7 +22,9 @@
   },
   "devDependencies": {
     "@babel/core": "^8.0.1",
+    "@babel/plugin-transform-runtime": "^8.0.1",
     "@babel/preset-env": "^8.0.2",
+    "@babel/runtime": "^8.0.0",
     "babel-loader": "^10.1.1",
     "css-loader": "^7.1.4",
     "style-loader": "^4.0.0",
@@ -35,6 +37,7 @@
     "@codemirror/state": "^6.7.1",
     "@codemirror/view": "^6.43.6",
     "@lezer/markdown": "^1.7.1",
+    "alpinejs": "^3.15.12",
     "codemirror-live-markdown": "github:blueberrycongee/codemirror-live-markdown#pull/3/head",
     "katex": "^0.17.0",
     "lowlight": "^3.3.0"

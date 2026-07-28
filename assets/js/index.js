@@ -1,7 +1,18 @@
 console.log('Webpack bundle loaded successfully!');
 
-document.addEventListener('DOMContentLoaded', async function() {
-    console.log('DOM Ready!');
+//region AlpineJS
+// Dynamically import Alpine with Webpack
+import(/* webpackMode: "eager" */ 'alpinejs')
+    .then(module => {
+        const Alpine = module.default || module;
+        window.Alpine = Alpine;
+        Alpine.start();
+        console.log('Alpine.js loaded successfully!');
+    })
+    .catch(error => {
+        console.error('Failed to load Alpine.js:', error);
+    });
+//endregion
 
 let hiddenEditorContainer = document.getElementById('editor-hidden-container');
 let isHidden = true;
