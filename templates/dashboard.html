@@ -3,7 +3,7 @@
 {% block title %}Open Page{% endblock %}
 
 {% block content %}
-    {% include 'partials/navbar.html' %}
+    {% include 'core/navbar.html' %}
     <h1 class="text-green-700">Dashboard</h1>
 
 {% comment %}    <div id="change-password-settings"
@@ -28,7 +28,7 @@
         Open Modal
     </button>
 
-    {% include 'partials/_modal.html' with close_events="campaignCreated" modal_content="Loading campaign form!"%}
+    {% include 'core/_modal.html' with close_events="campaignCreated" modal_content="Loading campaign form!"%}
 
    {% comment %} <div id="modal" class="hidden fixed z-50 inset-0 w-full h-full overflow-auto bg-black/40">
         <div id="modal-container" class="bg-mist-50/100 m-16 p-10 border w-4/5 border-neutral-400">
