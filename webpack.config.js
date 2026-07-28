@@ -20,8 +20,9 @@ module.exports = {
           options: {
             presets: [
                 ['@babel/preset-env', {
-                                modules: false,
-                                // Remove targets to avoid the error
+                  modules: 'auto',
+                  targets: '> 0.25%, not dead'
+                  // Remove targets to avoid the error
             }]
             ]
           }
@@ -32,6 +33,13 @@ module.exports = {
         use: ["style-loader", "css-loader"],
       },
     ]
+  },
+  resolve: {
+    extensions: ['.js', '.mjs'],
+    alias: {
+      // Ensure Alpine.js resolves correctly
+      alpinejs: path.resolve(__dirname, 'node_modules/alpinejs'),
+    }
   },
   plugins: [
     new BundleTracker({ path: __dirname, filename: "webpack-stats.json" }),
