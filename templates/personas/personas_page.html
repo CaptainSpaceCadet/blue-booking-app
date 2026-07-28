@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block content %}
+    <div hx-get="{% url 'personas:personas-content-page' campaign_id=campaign_id %}"
+         hx-trigger="load"
+         hx-swap="outerHTML"
+    ></div>
+{% endblock content %}
