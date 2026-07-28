@@ -26,6 +26,30 @@ def user_profile3(db):
 
 
 @pytest.fixture
+def authenticated_gm_client(client, gm_membership):
+    client.force_login(gm_membership.user.user)
+    return client
+
+
+@pytest.fixture
+def authenticated_player_client(client, player_membership):
+    client.force_login(player_membership.user.user)
+    return client
+
+
+@pytest.fixture
+def unaffiliated_user_profile(db):
+    user = User.objects.create_user(username="unaffiliated", password="testpass")
+    return UserProfile.objects.create(user=user, display_name="Unaffiliated User")
+
+
+@pytest.fixture
+def unaffiliated_client(client, unaffiliated_user_profile):
+    client.force_login(unaffiliated_user_profile.user)
+    return client
+
+
+@pytest.fixture
 def campaign(db, user_profile):
     return Campaign.objects.create(
         title="Test Campaign", description="Test Description"

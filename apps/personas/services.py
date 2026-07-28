@@ -4,23 +4,6 @@ Persona service layer for business logic.
 This module contains service functions that handle campaign-related operations.
 All functions expect validated input and raise appropriate exceptions for
 invalid operations.
-
-TODO:
-- has_reached_persona_limit x
-- create_persona x
-- create_member_persona x
-- create_player_persona x
-- create_npc_persona
-- delete_persona x
-- transfer_persona x
-- transfer_entrusted_personas
-- retire_persona x
-- retire_character_personas_for_membership x
-- retire_npc_personas_for_membership x
-- retire_personas_for_leaving_campaign x
-- edit_persona_details x
-- promote_personas_to_gm_for_membership x
-- demote_personas_to_player_for_membership x
 """
 
 from typing import List
