@@ -38,12 +38,12 @@ def create_campaign(request):
     Creating a new campaign via HTMX. Non-HTMX requests are redirected to the dashboard.
 
     This view handles both GET and POST requests for the campaign creation workflow.
-    It expects HTMX requests and returns partial HTML responses for HTMX swaps.
+    It expects HTMX requests and returns partial HTML responses for HTMX swaps as well as HTMX triggers.
 
     It renders the form via campaigns/_create_campaign_form.html. Campaign creation is delegated to services.create_campaign().
 
     - **GET**: Returns an empty campaign creation form.
-    - **POST**: Validates the form data and creates a new campaign if valid, returning a HttpResponse.
+    - **POST**: Validates the form data.
         - If the form is invalid, return the campaign creation form with the errors.
         - If the form is valid and a campaign is created successfully, return a HttpResponse.
             - The HttpResponse triggers a 'campaignCreated' event to refresh campaign elements such as #campaign-list.
@@ -107,8 +107,8 @@ def create_campaign(request):
     )
 
 
-@members_only_pass_campaign_and_membership("id")
-def campaign_page(request, id, campaign, membership):
+@members_only_pass_campaign_and_membership("campaign_id")
+def campaign_page(request, campaign_id, campaign, membership):
     """
     Returns the campaign page HTML page. The campaign page acts as a dashboard for a campaign.
 
@@ -119,7 +119,7 @@ def campaign_page(request, id, campaign, membership):
     - **GET**: Returns the campaign page HTML page
 
     :param request: HttpRequest
-    :param id: The id of the campaign
+    :param campaign_id: The id of the campaign
     :param membership: Populated by @members_only_pass_campaign_and_membership
     :param campaign: Populated by @members_only_pass_campaign_and_membership
     :return: The campaign HTML page
@@ -143,3 +143,32 @@ def campaign_page(request, id, campaign, membership):
         )
 
     return render(request, "campaigns/campaign_page.html", {"campaign": campaign})
+
+
+@members_only_pass_campaign_and_membership("campaign_id")
+def campaign_settings_page(request, campaign_id, campaign, membership):
+    """
+    Handles the rendering of the campaign settings page, ensuring the request is valid
+    and conforms to expected parameters. Only GET requests are allowed, and HTMX requests
+    are explicitly disallowed. The function expects campaign-specific context to render
+    the corresponding settings page.
+
+    :param request: The HTTP request object.
+    :param campaign_id: The unique identifier for the campaign.
+    :param campaign: The campaign object containing relevant data for rendering.
+    :param membership: The membership object associated with the campaign.
+    :return: An HTTP response rendering the campaign settings page.
+    """
+    if request.htmx:
+        return HttpResponseBadRequest(
+            "Requests to the campaign-settings-page endpoint must not be HTMX requests."
+        )
+
+    if request.method != "GET":
+        return HttpResponseBadRequest(
+            "Requests to the campaign-page endpoint must be GET requests."
+        )
+
+    return render(
+        request, "campaigns/campaign_settings_page.html", {"campaign": campaign}
+    )
