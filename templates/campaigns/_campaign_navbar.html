@@ -1,0 +1,351 @@
+{% comment %}{% load static %}{% endcomment %}
+<nav
+  id="main-nav"
+  class="
+    fixed top-0 left-0 right-0 z-50
+    lg:fixed lg:top-0 lg:left-0 lg:bottom-0 lg:right-auto
+    flex lg:flex-col
+    bg-white dark:bg-gray-800 border-b lg:border-b-0 lg:border-r border-gray-200 dark:border-gray-700
+    transition-all duration-300 ease-in-out
+    h-14 lg:min-h-screen
+  "
+  x-data="{
+    expanded: false,
+    isDesktop: window.innerWidth >= 1024
+  }"
+  x-init="
+    window.addEventListener('resize', () => {
+      isDesktop = window.innerWidth >= 1024;
+      if (!isDesktop) expanded = false;
+    });
+  "
+  @click="
+    if (isDesktop && !$event.target.closest('a')) {
+      expanded = !expanded;
+    }
+  "
+  :class="{
+    'lg:w-56': expanded && isDesktop,
+    'lg:w-14': !expanded && isDesktop
+  }"
+>
+  <div class="flex lg:flex-col w-full h-full items-center lg:items-stretch">
+    <!-- Narrow screens (mobile/tablet) - Top bar -->
+    <template x-if="!isDesktop">
+      <div class="flex items-center w-full h-full px-3 gap-2">
+        <!-- Back button - left -->
+        <a
+          href="{% url 'core:dashboard' %}"
+          class="
+            flex items-center gap-2
+            px-2 py-1.5 rounded-lg
+            text-gray-700 dark:text-gray-300
+            hover:bg-gray-100 dark:hover:bg-gray-700
+            transition-colors duration-200
+            flex-shrink-0
+          "
+          aria-label="Back to campaigns"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+          </svg>
+        </a>
+
+        <!-- Campaign Title - conditionally shown if space allows -->
+        <div class="flex-1 min-w-0 overflow-hidden">
+          <p
+            class="text-sm font-medium text-gray-700 dark:text-gray-300 truncate"
+            id="campaign-title-narrow"
+          >
+            {{ campaign.title }}
+          </p>
+        </div>
+
+        <!-- Navigation icons - right -->
+        <div class="flex items-center gap-1 flex-shrink-0">
+          <a
+            href="#"
+            class="p-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 relative group"
+            aria-label="Dashboard"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+            </svg>
+            <span class="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-gray-900 text-white text-xs rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+              Dashboard
+            </span>
+          </a>
+
+          <a
+            href="#"
+            class="p-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 relative group"
+            aria-label="Personas"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" />
+            </svg>
+            <span class="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-gray-900 text-white text-xs rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+              Personas
+            </span>
+          </a>
+
+          <a
+            href="#"
+            class="p-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 relative group"
+            aria-label="Settings"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+            </svg>
+            <span class="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-gray-900 text-white text-xs rounded whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+              Settings
+            </span>
+          </a>
+        </div>
+      </div>
+    </template>
+
+    <!-- Wide screens (desktop) - Sidebar -->
+    <template x-if="isDesktop">
+      <div class="flex flex-col w-full h-full py-2">
+        <!-- Back button - always visible -->
+        <a
+          href="{% url 'core:dashboard' %}"
+          class="
+            flex items-center gap-3
+            px-3 py-2.5 rounded-lg
+            text-gray-700 dark:text-gray-300
+            hover:bg-gray-100 dark:hover:bg-gray-700
+            transition-colors duration-200
+            relative group
+            mx-1
+          "
+          :class="{
+            'justify-start': expanded,
+            'justify-center': !expanded
+          }"
+          aria-label="Back to campaigns"
+        >
+          <span class="flex-shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+            </svg>
+          </span>
+          <span
+            class="text-sm font-medium whitespace-nowrap transition-all duration-200"
+            x-show="expanded"
+          >
+            Back
+          </span>
+          <!-- Tooltip for collapsed state -->
+          <span
+            class="
+              absolute left-full ml-2 px-2 py-1
+              bg-gray-900 text-white text-xs rounded
+              opacity-0 group-hover:opacity-100
+              transition-opacity duration-200
+              whitespace-nowrap
+              pointer-events-none
+            "
+            x-show="!expanded"
+          >
+            Back to campaigns
+          </span>
+        </a>
+
+        <!-- Divider -->
+        <div class="border-t border-gray-200 dark:border-gray-700 mx-2 my-1"></div>
+
+        <!-- Dashboard Link -->
+        <a
+          href="{% url 'campaigns:campaign-page' campaign.id %}"
+          class="
+            flex items-center gap-3
+            px-3 py-2.5 rounded-lg
+            text-gray-700 dark:text-gray-300
+            hover:bg-gray-100 dark:hover:bg-gray-700
+            transition-colors duration-200
+            relative group
+            mx-1
+          "
+          :class="{
+            'justify-start': expanded,
+            'justify-center': !expanded
+          }"
+        >
+          <span class="flex-shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+            </svg>
+          </span>
+          <span
+            class="text-sm font-medium whitespace-nowrap transition-all duration-200"
+            x-show="expanded"
+          >
+            Dashboard
+          </span>
+          <span
+            class="
+              absolute left-full ml-2 px-2 py-1
+              bg-gray-900 text-white text-xs rounded
+              opacity-0 group-hover:opacity-100
+              transition-opacity duration-200
+              whitespace-nowrap
+              pointer-events-none
+            "
+            x-show="!expanded"
+          >
+            Dashboard
+          </span>
+        </a>
+
+        <!-- Personas Link -->
+        <a
+          href="{% url 'personas:personas-page' campaign.id %}"
+          class="
+            flex items-center gap-3
+            px-3 py-2.5 rounded-lg
+            text-gray-700 dark:text-gray-300
+            hover:bg-gray-100 dark:hover:bg-gray-700
+            transition-colors duration-200
+            relative group
+            mx-1
+          "
+          :class="{
+            'justify-start': expanded,
+            'justify-center': !expanded
+          }"
+        >
+          <span class="flex-shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 0 0 3.741-.479 3 3 0 0 0-4.682-2.72m.94 3.198.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0 1 12 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 0 1 6 18.719m12 0a5.971 5.971 0 0 0-.941-3.197m0 0A5.995 5.995 0 0 0 12 12.75a5.995 5.995 0 0 0-5.058 2.772m0 0a3 3 0 0 0-4.681 2.72 8.986 8.986 0 0 0 3.74.477m.94-3.197a5.971 5.971 0 0 0-.94 3.197M15 6.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm6 3a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Zm-13.5 0a2.25 2.25 0 1 1-4.5 0 2.25 2.25 0 0 1 4.5 0Z" />
+            </svg>
+          </span>
+          <span
+            class="text-sm font-medium whitespace-nowrap transition-all duration-200"
+            x-show="expanded"
+          >
+            Personas
+          </span>
+          <span
+            class="
+              absolute left-full ml-2 px-2 py-1
+              bg-gray-900 text-white text-xs rounded
+              opacity-0 group-hover:opacity-100
+              transition-opacity duration-200
+              whitespace-nowrap
+              pointer-events-none
+            "
+            x-show="!expanded"
+          >
+            Personas
+          </span>
+        </a>
+
+        <!-- Settings Link -->
+        <a
+          href="{% url 'campaigns:campaign-settings-page' campaign.id %}"
+          class="
+            flex items-center gap-3
+            px-3 py-2.5 rounded-lg
+            text-gray-700 dark:text-gray-300
+            hover:bg-gray-100 dark:hover:bg-gray-700
+            transition-colors duration-200
+            relative group
+            mx-1
+          "
+          :class="{
+            'justify-start': expanded,
+            'justify-center': !expanded
+          }"
+        >
+          <span class="flex-shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+            </svg>
+          </span>
+          <span
+            class="text-sm font-medium whitespace-nowrap transition-all duration-200"
+            x-show="expanded"
+          >
+            Settings
+          </span>
+          <span
+            class="
+              absolute left-full ml-2 px-2 py-1
+              bg-gray-900 text-white text-xs rounded
+              opacity-0 group-hover:opacity-100
+              transition-opacity duration-200
+              whitespace-nowrap
+              pointer-events-none
+            "
+            x-show="!expanded"
+          >
+            Settings
+          </span>
+        </a>
+
+        <!-- Push campaign info to bottom -->
+        <div class="mt-auto"></div>
+
+        <!-- Campaign Info (only shown when expanded) -->
+        <template x-if="expanded">
+          <div>
+            <div class="border-t border-gray-200 dark:border-gray-700 mx-2"></div>
+            <div class="px-3 py-2">
+              <p class="text-sm font-medium text-gray-700 dark:text-gray-300 truncate">
+                {{ campaign.title }}
+              </p>
+              <p class="text-xs text-gray-500 dark:text-gray-400 truncate mt-0.5">
+                {{ campaign.description|truncatechars:40 }}
+              </p>
+            </div>
+          </div>
+        </template>
+      </div>
+    </template>
+  </div>
+</nav>
+
+<!-- Add padding to main content to account for navbar -->
+<style>
+  /* Add padding to main content for fixed navbar */
+  body main {
+    padding-top: 3.5rem; /* h-14 */
+  }
+
+  @media (min-width: 1024px) {
+    body main {
+      padding-top: 0;
+      padding-left: 3.5rem; /* w-14 when collapsed */
+      transition: padding-left 0.3s ease-in-out;
+    }
+  }
+</style>
+
+<!-- JavaScript to handle the title visibility check -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const titleEl = document.getElementById('campaign-title-narrow');
+    if (titleEl) {
+      const parent = titleEl.parentElement;
+      const checkOverflow = () => {
+        if (titleEl.scrollWidth > parent.clientWidth) {
+          titleEl.style.display = 'none';
+        } else {
+          titleEl.style.display = '';
+        }
+      };
+
+      checkOverflow();
+
+      let resizeTimeout;
+      window.addEventListener('resize', function() {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(checkOverflow, 100);
+      });
+    }
+  });
+</script>
