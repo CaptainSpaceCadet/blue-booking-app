@@ -1,222 +1,482 @@
-# 📘 Blue-Booking Web Application 📘
-[Bluebooking](https://thealexandrian.net/wordpress/40005/roleplaying-games/ptolus-running-the-campaign-bluebooking) is a traditional TTRPG technique which allows for role-playing outside of the main game sessions. Historically, it involved sharing a notebook between players where they would write out in-character notes and scenes between their character and NPCs. Today, it is more commonly done via chat services.
+# 📘 Blue-Booking Web Application
 
-This web application allows for online bluebooking within an TTRPG group. It functions similarly to a blogging service.
+[Bluebooking](https://thealexandrian.net/wordpress/40005/roleplaying-games/ptolus-running-the-campaign-bluebooking) is a traditional TTRPG technique allowing for role-playing outside of main game sessions. This web application brings that experience online, functioning similarly to a collaborative blogging platform for gaming groups.
 
 ## 📋 Table of Contents
-1. Tech Stack
-	- [Frontend](#frontend)
-	-  [Backend](#backend)
-		- [Packages](#packages-with-important-functionality)
-	- [Database](#database)
-	- [Testing and QA](#testing-and-qa)
-2. Startup Guide
-	- [How to run locally?](#how-to-run-locally?)
-	- [How to run via Docker?](#how-to-run-via-docker?)
-3. Contribution Guide
-	- [Workflow](#workflow)
-	- [Project Structure](#project-structure)
-		- [Branches](#branches)
-		- [File Structure](#file-structure)
-		- [Testing Structure](#test-structure)
+
+- [Tech Stack](#tech-stack)
+- [Architecture](#architecture)
+- [Development Setup](#development-setup)
+- [Production Deployment](#production-deployment)
+- [Docker Setup](#docker-setup)
+- [Contribution Guide](#contribution-guide)
+- [Testing & QA](#testing--qa)
+- [Troubleshooting](#troubleshooting)
 
 ## ⚙️ Tech Stack
-This project uses Django+HTMX to implementation the blue-booking web application. Here is the architecture of the application:
-```mermaid
-flowchart LR
-	subgraph Browser
-		b1@{ shape: brace-r, label: "General Functions:<br>
-		∙ Make HTML Page requests<br>
-		∙ Render HTML Pages<br>
-		∙ Style HTML using CSS and Tailwind<br>
-		∙ Run JavaScript functions<br>
-		∙ Load media such as images and videos<br>
-		" }
-		b2[["User's Browser<br><span style='font-size: 12px;'>User might use a Chromium browser such as Google Chrome or a popular alternative such as Safari or Firefox.</span>"]]
-		b3@{ shape: comment, label: "HTMX Functions:<br>
-		∙ Make partial page updates<br>
-		∙ Send HX-Request headers<br>
-		∙ Swap HTML fragments
-		" }
-	end
-	Browser--Send HTTP requests-->w1
-	
-	subgraph Django Web Server
-		w1["URL ROUTER<br><span style='font-size: 12px;'>
-		∙ Receives all incoming HTTP requests<br>
-		∙ Routes HTML and HTMX request to the appropriate views<br>
-		</span>
-		"]
-		w1--Routes HTML/HTMX to appropriate views-->w2
-		
-		w2["VIEWS<br><span style='font-size: 12px;'>
-		∙ Handles HTML and HTMX requests<br>
-		∙ Return full HTML pages or partial HTML fragments<br>
-		∙ Combines templates with application data to generate HTML responses<br>
-		</span>
-		"]
-		w2--Use templates to structure HTML output-->w3
-		w2--Use models to query persistent data-->w4
-		
-		w3["TEMPLATES<br><span style='font-size: 12px;'>
-		∙ Represents the base HTML from which HTML responses inherit from<br>
-		∙ Provides the foundation for how the HTML pages should be structured<br>
-		</span>
-		"]
-		
-		w4["MODELS<br><span style='font-size: 12px;'>
-		∙ The Object-Relational Mapping between the Django Server and the Database<br>
-		∙ Allows the database to be queried using Python code<br>
-		</span>
-		"]
-	end
-	w4--Send SQL Queries-->Database
-	
-	subgraph Database
-		d1[("Postgres<br><span style='font-size: 10px;'>Final build database.</span>")]
-		d2[("SQLite<br><span style='font-size: 10px;'>Temporary database used during developement.</span>")]
-		d3@{ shape: comment, label: "Databases:<br>
-		∙ Keep persistent data for all users<br>
-		" }
-	end
-```
+
 ### Frontend
-- **HTML** – Standard markup language for web pages.
-- **CSS + Tailwind CSS** – CSS is the standard styling system for the web, while Tailwind CSS provides a set of CSS styles that makes styling faster and more consistent.
-- **HTMX** – Extension of HTML which allows for dynamically updating parts of an HTML page without requiring a full page reload.
-- **TypeScript** – A typed superset of JavaScript that improves editor support and allows for earlier error detection during development.
+| Technology | Purpose |
+|------------|---------|
+| **HTML** | Standard markup language |
+| **Tailwind CSS** | Utility-first CSS framework for styling |
+| **HTMX** | Dynamic page updates without full reloads |
+| **TypeScript** | Typed JavaScript for better editor support |
+| **Alpine.js** | Lightweight JavaScript framework for interactivity |
+| **Webpack** | Module bundler for JavaScript/TypeScript |
+
 ### Backend
-- **Django** – Python web framework responsible for request handling, business logic, rendering templates, and interacting with the database.
-#### Packages with Important Functionality
-- **django-htmx** – Adds additional utility functions for creating HTMX code and handle HTMX code in Django.
-- **django-allauth** – Allows for easy, standardised authentication.
-### Database
-- **SQLite** – Lightweight file-based database used during development.
-- **PostgreSQL** – Fast and modern production database.
-### Testing and QA
-- **pytest + pytest-django** – Testing framework.
-- **coverage** – Measures the coverage of tests.
-- **pylint + pylint-django** – Checks code quality and style.
-- **black** – Checks and enforces code formatting.
+| Technology | Purpose |
+|------------|---------|
+| **Django** | Full-featured Python web framework |
+| **Django-allauth** | Authentication and account management |
+| **Django-htmx** | HTMX utilities for Django |
+| **Django-tailwind** | Tailwind CSS integration |
+| **Django-webpack-loader** | Webpack integration |
 
-## 🚀 Startup Guide
+### Server Infrastructure
+| Component | Purpose |
+|-----------|---------|
+| **Uvicorn** | ASGI server for async Django |
+| **Nginx** | Reverse proxy and static file server |
+| **PostgreSQL** | Production database |
+| **SQLite** | Development database |
+
+### Testing & Quality Assurance
+| Tool | Purpose |
+|------|---------|
+| **pytest** | Testing framework |
+| **coverage** | Test coverage reporting |
+| **pylint** | Code quality linting |
+| **black** | Code formatting |
+
+## 🏗️ Architecture
+
+```mermaid
+flowchart TB
+    subgraph Client["Client Side"]
+        Browser["User Browser"]
+        HTMX["HTMX for Dynamic Updates"]
+        Alpine["Alpine.js for Interactivity"]
+        Tailwind["Tailwind CSS Styling"]
+    end
+
+    subgraph Docker["Docker Container Environment"]
+        subgraph Nginx["Nginx Proxy"]
+            StaticServer["Static File Server"]
+            ReverseProxy["Reverse Proxy"]
+        end
+
+        subgraph WebApp["Django Application"]
+            Uvicorn["Uvicorn ASGI Server"]
+            DjangoApp["Django App with Webpack Loader"]
+            TailwindCSS["Django-tailwind"]
+        end
+    end
+
+    subgraph DatabaseLayer["Database Layer"]
+        Postgres[("PostgreSQL<br>Production")]
+        SQLite[("SQLite<br>Development")]
+    end
+
+    Browser --> Nginx
+    Nginx --> StaticServer
+    Nginx --> ReverseProxy
+    ReverseProxy --> Uvicorn
+    Uvicorn --> DjangoApp
+    DjangoApp --> TailwindCSS
+    DjangoApp --> DatabaseLayer
+    DatabaseLayer --> Postgres
+    DatabaseLayer --> SQLite
+```
+
+## 🚀 Development Setup
+
+### Prerequisites
+- Python 3.11+
+- Node.js 18+
+- npm or yarn
+- Git
+
+### Quick Start
+
 <details>
-<summary>How to run locally?</summary>
+<summary><b>Click to expand: Local Development Setup</b></summary>
 
-#### 1. Clone the repository
+#### 1. Clone the Repository
 ```bash
 git clone https://github.com/CaptainSpaceCadet/blue-booking-app.git
 cd blue-booking-app
 ```
-#### 2. Create a virtual environment
-If using Linux or MacOS:
+
+#### 2. Set Up Python Virtual Environment
 ```bash
-python -m venv venv
+# macOS/Linux
+python3 -m venv venv
 source venv/bin/activate
-```
-If using windows:
-```bash
+
+# Windows
 python -m venv venv
-source venv\Scripts\activate
+venv\Scripts\activate
 ```
-#### 3. Install dependencies
+
+#### 3. Install Python Dependencies
 ```bash
 pip install -r requirements.txt
 ```
-#### 4. Set up .env file
-Create a `.env` file in the project root. Link to a SQLite or Postgres database depending on your preference.
-```env
-SECRET_KEY=your-secret-key-here
-DEBUG=True
-DATABASE_URL=sqlite:///db.sqlite3
+
+#### 4. Install Node.js Dependencies
+```bash
+npm install
 ```
-#### 5. Apply database migrations
+
+#### 5. Configure Environment Variables
+Create a `.env` file in the project root:
+
+```env
+# Django Settings
+DEBUG=True
+SECRET_KEY=your-development-secret-key
+ALLOWED_HOSTS=localhost,127.0.0.1
+
+# Database (SQLite for development)
+DATABASE_URL=sqlite:///db.sqlite3
+
+# Optional: Use PostgreSQL locally
+# DATABASE_URL=postgresql://user:password@localhost:5432/dbname
+```
+
+#### 6. Run Database Migrations
 ```bash
 python manage.py migrate
 ```
-#### 6. Run the web application
+
+#### 7. Build Frontend Assets
+```bash
+# Tailwind CSS (watch mode for development)
+python manage.py tailwind start &
+
+# Webpack (watch mode for development)
+npx webpack --mode=development --watch &
+
+# Or build once
+python manage.py tailwind build
+npx webpack --mode=development
+```
+
+#### 8. Start the Development Server
 ```bash
 python manage.py runserver
 ```
-The web application should be available at `http://localhost:8000` in your browser.
+
+Access the application at: http://localhost:8000
+
+#### 9. Create Superuser (Optional)
+```bash
+python manage.py createsuperuser
+```
 
 </details>
 
-<details>
-<summary>How to run using Docker?</summary>
+## 🐳 Docker Setup
 
-#### 1. Clone the repository
+<details>
+<summary><b>Click to expand: Docker Development & Production</b></summary>
+
+### Prerequisites
+- Docker Desktop 4.28+
+- Docker Compose V2
+
+### Development with Docker
+
+#### 1. Clone the Repository
 ```bash
 git clone https://github.com/CaptainSpaceCadet/blue-booking-app.git
 cd blue-booking-app
 ```
 
-#### 2. Run the web application
-```bash
-docker compose up --build
+#### 2. Configure Environment
+Create `.env.production` (for production) or `.env` (auto-loaded):
+
+```env
+# Django Settings
+DEBUG=False
+SECRET_KEY=your-production-secret-key-here
+ALLOWED_HOSTS=localhost,127.0.0.1,your-domain.com
+
+# PostgreSQL Settings
+POSTGRES_USER=blue_booking_user
+POSTGRES_PASSWORD=your-strong-password-here
+POSTGRES_DB=blue_booking_db
+
+# pgAdmin Settings (optional)
+PGADMIN_EMAIL=admin@example.com
+PGADMIN_PASSWORD=your-pgadmin-password
+
+# Database URL (auto-generated from above)
+DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
 ```
-The web application should be available at `http://localhost:8000` in your browser.
+
+#### 3. Build and Start Containers
+```bash
+# Build and start all services
+docker compose up -d --build
+
+# View logs
+docker compose logs -f
+
+# Check running containers
+docker compose ps
+```
+
+#### 4. Run Database Migrations
+```bash
+docker compose exec web python manage.py migrate
+```
+
+#### 5. Create Superuser
+```bash
+docker compose exec web python manage.py createsuperuser
+```
+
+#### 6. Access Services
+| Service | URL |
+|---------|-----|
+| Django App (via Nginx) | http://localhost |
+| Django App (Direct) | http://localhost:8000 |
+| pgAdmin | http://localhost:5050 |
+
+#### 7. Common Docker Commands
+```bash
+# Stop all services
+docker compose down
+
+# Stop and remove volumes (WARNING: deletes database)
+docker compose down -v
+
+# Rebuild after changes
+docker compose up -d --build
+
+# SSH into web container
+docker compose exec web bash
+
+# Run Django commands
+docker compose exec web python manage.py [command]
+
+# Backup database
+docker compose exec db pg_dump -U blue_booking_user blue_booking_db > backup.sql
+
+# Restore database
+cat backup.sql | docker compose exec -T db psql -U blue_booking_user blue_booking_db
+```
+
+### Production Deployment with Docker
+
+#### 1. Build Production Images
+```bash
+# Build optimized production images
+docker compose -f docker-compose.yml build --no-cache
+```
+
+#### 2. Deploy
+```bash
+# Start in production mode
+DEBUG=False docker compose up -d
+
+# Or use a production-specific compose file
+docker compose -f docker-compose.prod.yml up -d
+```
+
+#### 3. Monitoring
+```bash
+# View logs
+docker compose logs -f
+
+# Check resource usage
+docker stats
+
+# Monitor database
+docker compose exec db psql -U blue_booking_user -d blue_booking_db
+```
+
+### Production Optimizations
+
+| Feature | Implementation |
+|---------|---------------|
+| **Static Files** | Nginx serves from STATIC_ROOT |
+| **Database** | PostgreSQL with persistent volumes |
+| **Caching** | Redis (optional) or Django cache |
+| **Workers** | Multiple Uvicorn workers |
+| **Health Checks** | Database health checks |
+| **Security** | Non-root user in containers |
+
 </details>
 
-## 🤝 Contribution Guide
-### Workflow
-#### 1. Identify a feature to develop or a bug to fix
-Create an issue associated with a feature or bug you plan to implement or fix.
-#### 2. Create a branch from `develop`
-Create a branch on which you will implement the feature or fix the bug. Name the branch based on this repository's [variation of conventional branch format](https://github.com/CaptainSpaceCadet/blue-booking-app/blob/main/docs/branch-conventions.md).
-#### 3. Commit to your branch
-Commit your changes to the branch using the [conventional commit format](https://github.com/CaptainSpaceCadet/blue-booking-app/blob/main/docs/commit-conventions.md). In the commit body the issue number of your issue, for example `#1`.
-#### 4. Write tests for new feature (optional)
-If you implemented a new feature, write unit tests for every new function or class.
-- Write more detailed description of test structure TBD.
-#### 5. Run tests and code quality assurance
-##### Tests
-Run all tests and verify they pass:
+## 🧪 Testing & QA
+
+### Running Tests
 ```bash
+# Run all tests
 pytest
-```
-All tests must pass successfully.
-##### Coverage
-Run tests with coverage reporting:
-```bash
-coverage erase
-coverage run -m pytest
+
+# Run with coverage
+coverage run -m pytest
 coverage report
-```
-The total coverage should be above 80%. To view a detailed HTML report:
-```bash
+
+# Generate HTML report
 coverage html
+# Open htmlcov/index.html
 ```
-Open htmlcov/index.html in your browser.
-##### Code Quality
-Run pylint to check the code quality:
+
+### Code Quality
 ```bash
+# Lint code
 pylint blue_booking_app
+
+# Format code
+black .
+
+# Check formatting
+black --check .
 ```
-Follow the instructions to improve the code. The final linting score should be above 8.0/10.0.
-##### Code Style
-Reformat the entire project into `black` style.
+
+### Pre-commit Hooks (Optional)
 ```bash
-black blue-booking-app
+# Install pre-commit hooks
+pre-commit install
+
+# Run manually
+pre-commit run --all-files
 ```
-Or reformat an individual file.
+
+## 🤝 Contribution Guide
+
+### Git Workflow
+
+#### Branch Strategy
+```mermaid
+gitGraph
+    commit
+    branch develop
+    checkout develop
+    commit
+    branch feature/new-feature
+    checkout feature/new-feature
+    commit
+    commit
+    checkout develop
+    merge feature/new-feature
+    checkout main
+    merge develop tag: "v1.0.0"
+```
+
+| Branch | Purpose | From | To |
+|--------|---------|------|----|
+| `main` | Production-ready code | - | - |
+| `develop` | Integration branch | `main` | `main` |
+| `feature/*` | New features | `develop` | `develop` |
+| `fix/*` | Bug fixes | `develop` | `develop` |
+| `hotfix/*` | Production hotfixes | `main` | `main` & `develop` |
+
+### Commit Conventions
+Follow [Conventional Commits](https://www.conventionalcommits.org/):
+
 ```bash
-black example.py
+feat: add user authentication
+fix: resolve login redirect issue
+docs: update API documentation
+style: format code with black
+refactor: restructure campaign module
+test: add unit tests for forms
+chore: update dependencies
 ```
-#### 6. Create pull request
-Should all the tests pass create a pull request, requesting the merging of your feature branch into the develop branch. 
-#### 7. Merge pull request
-Once your pull request has been approved it will attempt to be merged automatically into the `develop` branch. GitHub Actions automatically run the tests when merging, should these tests fail the merge will be rejected.
-#### 8. Pull `develop` into `main`
-Periodically representing the final releases of the app, the progress in `develop` will be pulled to `main`. Should everything go right, your feature or bug fix will be included.
-### Project Structure
-#### Branches
-- **`main`** – Production-ready code. Only merged from `develop` for releases.
-- **`develop`** – Integration branch. All features and fixes merge here.
-- **`feature/*`** – New features. Branch from `develop`, merge back to `develop`.
-- **`fix/*`** – Non-urgent bug fixes. Branch from `develop`, merge back to `develop`.
-- **`hotfix/*`** – Urgent production fixes. Branch from `main`, merge to both `main` and `develop`.
-#### File Structure
-- File structure TBD
-#### Testing Structure
-- Testing Structure TBD
+
+### Pull Request Process
+1. Create feature/fix branch from `develop`
+2. Write tests for new functionality
+3. Run test suite: `pytest`
+4. Run code quality checks: `pylint` and `black`
+5. Create PR with clear description
+6. Pass CI/CD checks (GitHub Actions)
+7. Get code review approval
+8. Merge to `develop`
+
+## 🔧 Troubleshooting
+
+### Common Issues
+
+<details>
+<summary><b>Static Files Not Loading</b></summary>
+
+**Solution:**
+```bash
+# Rebuild static files
+python manage.py tailwind build
+npx webpack --mode=production
+python manage.py collectstatic --noinput
+
+# Or with Docker
+docker compose exec web python manage.py collectstatic --noinput
+```
+</details>
+
+<details>
+<summary><b>Database Connection Issues</b></summary>
+
+**Solution:**
+```bash
+# Check if PostgreSQL is running
+docker compose ps db
+
+# Check logs
+docker compose logs db
+
+# Reset database (WARNING: deletes data)
+docker compose down -v
+docker compose up -d
+docker compose exec web python manage.py migrate
+```
+</details>
+
+<details>
+<summary><b>Webpack Build Failing</b></summary>
+
+**Solution:**
+```bash
+# Clean and rebuild
+rm -rf assets/webpack_bundles/
+rm -rf node_modules/
+npm install
+npx webpack --mode=development
+```
+</details>
+
+<details>
+<summary><b>Port Conflicts</b></summary>
+
+**Solution:**
+```bash
+# Check what's using port 80/8000/5432
+sudo lsof -i :80
+sudo lsof -i :8000
+
+# Change ports in docker-compose.yml
+ports:
+  - "8080:80"  # Change host port
+```
+</details>
+
+## 📚 Additional Resources
+
+- [Django Documentation](https://docs.djangoproject.com/)
+- [HTMX Documentation](https://htmx.org/docs/)
+- [Docker Documentation](https://docs.docker.com/)
+- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
+- [Webpack Documentation](https://webpack.js.org/concepts/)
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🤝 Acknowledgments
+- [The Alexandrian](https://thealexandrian.net/) for the bluebooking concept
