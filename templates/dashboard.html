@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Open Page{% endblock %}
+
+{% block content %}
+    {% include 'core/navbar.html' %}
+    <h1 class="text-green-700">Dashboard</h1>
+
+{% comment %}    <div id="change-password-settings"
+         hx-get="{% url 'accounts:password_change_partial' %}"
+         hx-trigger="load">
+    uh oh!
+    </div>{% endcomment %}
+    <section id="campaign-list"
+             hx-get="{% url 'campaigns:campaign-list' %}"
+             hx-trigger="load, campaignCreated from:body"
+    >
+        Loading campaigns...
+    </section>
+
+    <button id="modal-button"
+            onclick="openModal()"
+            hx-get="{% url 'campaigns:create-campaign' %}"
+            hx-trigger="click"
+            hx-target="#modal-contents"
+            hx-swap="innerHTML"
+    >
+        Open Modal
+    </button>
+
+    {% include 'core/_modal.html' with close_events="campaignCreated" modal_content="Loading campaign form!"%}
+
+   {% comment %} <div id="modal" class="hidden fixed z-50 inset-0 w-full h-full overflow-auto bg-black/40">
+        <div id="modal-container" class="bg-mist-50/100 m-16 p-10 border w-4/5 border-neutral-400">
+            <button id="modal-close"
+                    onclick="closeModal()"
+                    class="box-content bg-white/0 text-neutral-400 p-0 float-right text-3xl font-bold hover:text-black focus:text-black hover:no-underline focus:no-underline cursor-pointer">&times;</button>
+            <div id="modal-contents">
+                Loading modal...
+            </div>
+        </div>
+    </div>{% endcomment %}
+
+    {% comment %}<script>
+    var modal = document.getElementById('modal');
+
+    function openModal() {
+        modal.classList.remove('hidden');
+    }
+
+    function closeModal() {
+        modal.classList.add('hidden');
+    }
+
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeModal();
+        }
+    });
+
+    document.addEventListener('click', function(event) {
+        if (event.target === modal) {
+            closeModal();
+        }
+    });
+
+    document.addEventListener('campaignCreated', function(event) {
+        closeModal()
+    });
+    </script>{% endcomment %}
+
+{% endblock %}

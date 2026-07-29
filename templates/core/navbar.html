@@ -1,0 +1,13 @@
+
+<nav>
+    <ul>
+        {% if user.is_authenticated %}
+            <li><a href="{% url 'account_email' %}">Emails</a></li>
+            <li><a href="{% url 'account_change_password' %}">Change Password</a></li>
+            <li><a href="{% url 'account_logout' %}">Logout</a></li>
+        {% else %}
+            <li><a href="{% url 'account_login' %}">Login</a></li>
+            <li><a href="{% url 'account_signup' %}">Signup</a></li>
+        {% endif %}
+    </ul>
+</nav>

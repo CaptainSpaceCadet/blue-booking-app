@@ -1,12 +1,86 @@
 {% load django_htmx %}
+{% load static tailwind_tags %}
+{% load render_bundle from webpack_loader %}
+{% load markdown_filters %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{% block title %}Bluebooking Application{% endblock %}</title>
     {% htmx_script %}
+    {% tailwind_css %}
+
+    <style>
+        /* Smooth transitions for the main content */
+        .main-content {
+            transition: margin-left 0.3s ease, padding-left 0.3s ease;
+        }
+
+        @media (min-width: 1280px) {
+            /* When nav is expanded (checkbox checked) */
+            #nav-toggle:checked ~ .main-content-wrapper .main-content {
+                margin-left: 16rem; /* 64 * 0.25rem = 16rem for w-64 */
+            }
+
+            /* When nav is collapsed (checkbox unchecked) */
+            .main-content-wrapper .main-content {
+                margin-left: 5rem; /* 20 * 0.25rem = 5rem for w-20 */
+            }
+        }
+
+        /* Nav height transitions */
+        @media (max-width: 1279px) {
+            #nav-toggle:checked ~ #main-nav {
+                height: 100vh;
+            }
+            #main-nav {
+                height: 4rem; /* 16 * 0.25rem = 4rem for h-16 */
+            }
+        }
+
+        @media (min-width: 1280px) {
+            #nav-toggle:checked ~ #main-nav {
+                width: 16rem; /* w-64 */
+            }
+            #main-nav {
+                width: 5rem; /* w-20 */
+            }
+        }
+
+        /* Hide campaign title when nav is expanded on narrow screens */
+        @media (max-width: 1279px) {
+            #nav-toggle:checked ~ #main-nav .xl\:hidden .flex.items-center.gap-2 {
+                display: none !important;
+            }
+        }
+    </style>
 </head>
 <body hx-headers='{"x-csrftoken": "{{ csrf_token }}"}'>
+    <div id="editor-hidden-container" style="display:none;"></div>
 
+    <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
+        <div class="xl:flex xl:min-h-screen relative">
+            <!-- Hidden checkbox for nav toggle -->
+            <input type="checkbox" id="nav-toggle" class="hidden peer" />
+
+            <!-- Navbar -->
+            {% if campaign %}
+                {% include "campaigns/_campaign_navbar.html" with campaign=campaign %}
+            {% endif %}
+
+            <!-- Main Content Wrapper -->
+            <div class="main-content-wrapper flex-1">
+                <main class="main-content">
+                    <div class="container mx-auto px-4 py-6 pb-20 xl:pb-6">
+                        {% block content %}{% endblock %}
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
+
+    {% render_bundle 'main' 'js' %}
 </body>
 </html>

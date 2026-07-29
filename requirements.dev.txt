@@ -1,6 +1,11 @@
-pytest>=8.0
-pytest-django>=4.5
-pylint>=3.0,<4.0
-pylint-django>=2.5
-black>=24.0
-coverage>=7.0
+# Linting & Formatting
+black==26.5.1
+pylint-django==2.8.0
+
+# Testing
+coverage==7.15.0
+pytest-django==4.12.0
+
+# Dev tools (remove these from prod)
+pipdeptree==4.1.0  # for checking dependencies
+# pip==26.1.2  # ← you don't need to pin pip itself

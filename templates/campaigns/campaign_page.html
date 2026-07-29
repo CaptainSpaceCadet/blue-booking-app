@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}{{ campaign.title }}{% endblock %}
+
+{% block content %}
+    <h1 class="text-blue-100">{{ campaign.title }}</h1>
+    <p>{{ campaign.description }}</p>
+
+{#    <div hx-get="{% url 'personas:personas-content-page' campaign.id %}"#}
+{#         hx-trigger="load"#}
+{#         hx-swap="outerHTML"#}
+{#    >#}
+{#    Loading personas page...#}
+{#    </div>#}
+{% comment %}    <div hx-get="{% url 'personas:persona-list' campaign.id "NPC" "ACTIVE" %}"
+         hx-trigger="load"
+         hx-swap="outerHTML">
+    Loading persona list...
+    </div>{% endcomment %}
+
+
+{% comment %}    <section hx-get="{% url 'personas:create-persona' campaign.id "NPC" %}"
+             hx-trigger="load"
+             hx-swap="innerHTML"
+    >
+    Loading create-persona-form...
+    </section>{% endcomment %}
+{% endblock %}

@@ -1,0 +1,101 @@
+{% comment %}
+    A modal element.
+    - There can only be one per page.
+    - By default it closes via the close button, clicking of the modal content and pressing the escape key.
+    - To use the modal pass in a set of open and close events given a list of names separated by commas.
+    - You can also directly call it in JavaScript via OpenModal(), CloseModal()
+    - You can htmx swap content into the modal via #model-content
+
+    Example:
+    ```
+    <button onclick="openModal()"
+                hx-get="{% url 'campaigns:create-campaign' %}"
+                hx-trigger="click"
+                hx-target="#modal-contents"
+                hx-swap="innerHTML"
+                class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+            Create Campaign
+     </button>
+
+    {% include 'partials/modal.html' with
+        close_events="campaignCreated, modalClosed"
+        open_events="forceOpenModal"
+        modal_content="Loading campaign form..."
+     %}
+     ```
+{% endcomment %}
+
+<div id="modal" class="hidden fixed z-50 inset-0 w-full h-full overflow-auto bg-black/40">
+    <div id="modal-container"
+         class="bg-mist-50/100 m-16 p-10 border w-4/5 border-neutral-400 relative
+
+        ">
+        <button id="modal-close"
+                class="absolute top-4 right-4 text-3xl font-bold text-neutral-400 hover:text-black focus:text-black bg-transparent border-none p-0 cursor-pointer"
+                aria-label="Close modal">
+            &times;
+        </button>
+        <div id="modal-contents">
+            {{ modal_content|default:"Loading modal..." }}
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('modal');
+    if (!modal) {
+        console.warn("Modal not found in DOM.")
+        return;
+    }
+
+    window.openModal = function() {
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    };
+
+    window.closeModal = function() {
+        modal.classList.add('hidden');
+        document.body.style.overflow = '';
+    };
+
+    // Close button
+    document.getElementById('modal-close')?.addEventListener('click', window.closeModal);
+
+    // Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') window.closeModal();
+    });
+
+    // Backdrop click
+    document.addEventListener('click', function(e) {
+        if (e.target === modal) window.closeModal();
+    });
+
+    // Custom close events (comma-separated string)
+    {% if close_events %}
+    const closeEvents = '{{ close_events }}'.split(',').filter(Boolean);
+    closeEvents.forEach(function(eventName) {
+       const trimmed = eventName.trim();
+       if (trimmed) {
+           document.addEventListener(trimmed, window.closeModal);
+       }
+    });
+    {% endif %}
+
+    // Custom open events (comma-separated string)
+    {% if open_events %}
+    const openEvents = '{{ open_events }}'.split(',').filter(Boolean);
+    openEvents.forEach(function(eventName) {
+       const trimmed = eventName.trim();
+       if (trimmed) {
+           document.addEventListener(trimmed, window.openModal);
+       }
+    });
+    {% endif %}
+
+    // Debug logging (remove in production)
+    console.log('Modal initialized with close events:', '{{ close_events }}');
+    console.log('Modal initialized with open events:', '{{ open_events }}');
+});
+</script>

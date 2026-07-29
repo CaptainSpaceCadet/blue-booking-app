@@ -1,0 +1,156 @@
+<form id="edit-{{ persona.type|lower }}-persona-{{ persona.id }}-form"
+      method="post"
+      action="{% url 'personas:edit-persona' campaign_id=campaign.id persona_id=persona.id %}"
+      hx-post="{% url 'personas:edit-persona' campaign_id=campaign.id persona_id=persona.id %}"
+      hx-target="#edit-{{ persona.type|lower }}-persona-{{ persona.id }}-form"
+      hx-swap="outerHTML"
+      hx-trigger="submit"
+      class="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden mb-4"
+>
+    {% csrf_token %}
+
+    <!-- Header with title and close button -->
+    <div class="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
+        <h3 class="text-base font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+            Edit {{ persona.type|capfirst }} Persona: {{ persona.name }}
+        </h3>
+        <button type="button"
+                class="p-1.5 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+                hx-get="{% url 'personas:cancel-edit-persona' campaign_id=campaign.id persona_id=persona.id %}"
+                hx-trigger="click, closeAllEditors from:body"
+                hx-target="#edit-{{ persona.type|lower }}-persona-{{ persona.id }}-form"
+                hx-swap="outerHTML"
+                onclick="window.initEditor({
+                    containerId: null,
+                    textareaId: null,
+                })"
+                aria-label="Close"
+        >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+            </svg>
+        </button>
+    </div>
+
+    <!-- Form Body -->
+    <div class="px-4 py-4 space-y-4 bg-white dark:bg-gray-900">
+        <!-- Name Field -->
+        <div class="form-group">
+            <label for="{{ form.name.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Name <span class="text-red-500">*</span>
+            </label>
+            {{ form.name }}
+            {% if form.name.errors %}
+                <div class="form-error">
+                    {{ form.name.errors }}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Description Field -->
+        <div class="form-group">
+            <label for="{{ form.description.id_for_label }}" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Description
+            </label>
+            {{ form.description }}
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 mt-1">
+                <div id="edit-{{ persona.type|lower }}-persona-{{ persona.id }}-form-editor" class="min-h-[100px] prose prose-sm dark:prose-invert max-w-none"></div>
+            </div>
+            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Markdown supported</p>
+            {% if form.description.errors %}
+                <div class="form-error">
+                    {{ form.description.errors }}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Footer with actions -->
+    <div class="flex items-center justify-end gap-2 px-4 py-3 border-t border-gray-200 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/30">
+        <button type="submit"
+                class="btn-primary text-sm"
+                onclick="window.initEditor({
+                    containerId: null,
+                    textareaId: null,
+                })"
+        >
+            Save {{ persona.type|capfirst }}
+        </button>
+    </div>
+</form>
+
+{#<form id="edit-{{ persona.type|lower }}-persona-{{ persona.id }}-form"#}
+{#      method="post"#}
+{#      action="{% url 'personas:edit-persona' campaign_id=campaign.id persona_id=persona.id %}"#}
+{#      hx-post="{% url 'personas:edit-persona' campaign_id=campaign.id persona_id=persona.id %}"#}
+{#      hx-target="#edit-{{ persona.type|lower }}-persona-{{ persona.id }}-form"#}
+{#      hx-swap="outerHTML"#}
+{#      hx-trigger="submit">#}
+{#    {% csrf_token %}#}
+{##}
+{#    <button type="button"#}
+{#            hx-get="{% url 'personas:cancel-edit-persona' campaign_id=campaign.id persona_id=persona.id %}"#}
+{#            hx-trigger="click, closeAllEditors from:body"#}
+{#            hx-target="#edit-{{ persona.type|lower }}-persona-{{ persona.id }}-form"#}
+{#            hx-swap="outerHTML"#}
+{#            onclick="window.initEditor({#}
+{#                containerId: null,#}
+{#                textareaId: null,#}
+{#            })"#}
+{#    >#}
+{#        {% comment %} x-mark Hero Icon {% endcomment %}#}
+{#        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">#}
+{#            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />#}
+{#        </svg>#}
+{#    </button>#}
+{##}
+{#    <section>#}
+{#        <label for="{{ form.name.id_for_label }}">Name</label>#}
+{#        {{ form.name }}#}
+{#        <div>{{ form.name.errors }}</div>#}
+{#    </section>#}
+{##}
+{#    <section>#}
+{#        <label for="{{ form.description.id_for_label }}">Description</label>#}
+{#        {% comment %} Th hidden description input {% endcomment %}#}
+{#        {{ form.description }}#}
+{#        {% comment %} The input description display {% endcomment %}#}
+{#        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">#}
+{#            <div id="edit-{{ persona.type|lower }}-persona-{{ persona.id }}-form-editor"></div>#}
+{#        </div>#}
+{#        <div>{{ form.description.errors }}</div>#}
+{#    </section>#}
+{##}
+{#    <button type="submit"#}
+{#            onclick="window.initEditor({#}
+{#                containerId: null,#}
+{#                textareaId: null,#}
+{#            })"#}
+{#    >#}
+{#        Save Persona#}
+{#    </button>#}
+{##}
+{#    <script>#}
+{#        console.log('Loading editor for persona {{ persona.name }}');#}
+{#        // DOM is guaranteed to be loaded if this is loaded as a htmx partial#}
+{#        window.showEditor({#}
+{#            containerId: "edit-{{ persona.type|lower }}-persona-{{ persona.id }}-form-editor",#}
+{#            textareaId: "{{ form.description.id_for_label }}",#}
+{#            content: "{{ form.description.value|default_if_none:''|escapejs }}"#}
+{#        });#}
+{#        // TODO: might want to add error handling here#}
+{#    </script>#}
+{##}
+{#    <style>#}
+{#    /* This should definitely work */#}
+{#    .cm-editor {#}
+{#        background-color: #f0f0f0;#}
+{#        border: 3px solid red;#}
+{#    }#}
+{##}
+{#    /* Target rendered content */#}
+{#    .cm-content {#}
+{#        font-size: 18px;#}
+{#    }#}
+{#    </style>#}
+{#</form>#}

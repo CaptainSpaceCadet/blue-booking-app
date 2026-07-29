@@ -1,0 +1,43 @@
+<div id="personas-page-content">
+    <h1>Personas</h1>
+    <p>This is the list of personas you have in the {{ campaign.title }} campaign. You can use these personas to make posts.</p>
+    <p>There are two kinds of personas: member personas and fantasy personas. Member personas represent the real-world players of the campaign. If you want to make a post which is meta-textual you can use your member persona to do so. By contrast, fantasy personas represent the characters within the game, such as the the Player Character personas and the NPC personas. If you want to make a posts where you roleplay a in-game character you can do so through the fantasy personas.</p>
+
+    <section>
+        <h2>Active Personas</h2>
+        <div hx-get="{% url 'personas:persona-list' campaign_id=campaign.id persona_type="MEMBER" persona_status="ACTIVE" %}"
+             hx-trigger="load"
+             hx-swap="outerHTML">
+            Loading persona list...
+        </div>
+        <div hx-get="{% url 'personas:persona-list' campaign_id=campaign.id persona_type="CHARACTER" persona_status="ACTIVE" %}"
+             hx-trigger="load"
+             hx-swap="outerHTML">
+            Loading persona list...
+        </div>
+        <div hx-get="{% url 'personas:persona-list' campaign_id=campaign.id persona_type="NPC" persona_status="ACTIVE" %}"
+             hx-trigger="load"
+             hx-swap="outerHTML">
+            Loading persona list...
+        </div>
+    </section>
+
+    <section>
+        <h2>Retired Personas</h2>
+        <div hx-get="{% url 'personas:persona-list' campaign_id=campaign.id persona_type="MEMBER" persona_status="RETIRED" %}"
+             hx-trigger="load"
+             hx-swap="outerHTML">
+            Loading persona list...
+        </div>
+        <div hx-get="{% url 'personas:persona-list' campaign_id=campaign.id persona_type="CHARACTER" persona_status="RETIRED" %}"
+             hx-trigger="load"
+             hx-swap="outerHTML">
+            Loading persona list...
+        </div>
+        <div hx-get="{% url 'personas:persona-list' campaign_id=campaign.id persona_type="NPC" persona_status="RETIRED" %}"
+             hx-trigger="load"
+             hx-swap="outerHTML">
+            Loading persona list...
+        </div>
+    </section>
+</div>

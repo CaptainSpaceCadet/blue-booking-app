@@ -1,0 +1,48 @@
+{
+  "name": "blue-booking-app",
+  "version": "1.0.0",
+  "description": "[Bluebooking](https://thealexandrian.net/wordpress/40005/roleplaying-games/ptolus-running-the-campaign-bluebooking) is a traditional TTRPG technique which allows for role-playing outside of the main game sessions. Historically, it involved sharing a notebook between players where they would write out in-character notes and scenes between their character and NPCs. Today, it is more commonly done via chat services.",
+  "homepage": "https://github.com/CaptainSpaceCadet/blue-booking-app#readme",
+  "bugs": {
+    "url": "https://github.com/CaptainSpaceCadet/blue-booking-app/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CaptainSpaceCadet/blue-booking-app.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@babel/core": "^8.0.1",
+    "@babel/plugin-transform-runtime": "^8.0.1",
+    "@babel/preset-env": "^8.0.2",
+    "@babel/runtime": "^8.0.0",
+    "babel-loader": "^10.1.1",
+    "css-loader": "^7.1.4",
+    "style-loader": "^4.0.0",
+    "webpack-bundle-tracker": "^3.2.4",
+    "webpack-cli": "^7.2.1"
+  },
+  "dependencies": {
+    "@codemirror/basic-setup": "^0.20.0",
+    "@codemirror/lang-markdown": "^6.5.0",
+    "@codemirror/state": "^6.7.1",
+    "@codemirror/view": "^6.43.6",
+    "@lezer/markdown": "^1.7.1",
+    "alpinejs": "^3.15.12",
+    "codemirror-live-markdown": "github:blueberrycongee/codemirror-live-markdown#pull/3/head",
+    "katex": "^0.17.0",
+    "lowlight": "^3.3.0"
+  },
+  "allowScripts": {
+    "github:blueberrycongee/codemirror-live-markdown#da0aee392a138265f164be49ef8f04f5b6702d26": true
+  }
+}

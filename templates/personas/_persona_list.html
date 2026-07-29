@@ -1,0 +1,159 @@
+<section id="{{ persona_type|lower }}-{{ persona_status|lower }}-persona-list" class="mb-6">
+    <!-- Header with title and add button inline -->
+    <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+            {{ persona_type|capfirst }} Personas
+        </h3>
+
+        {% if persona_type|lower != "member" and persona_status|lower != "retired" %}
+        <button
+            id="create-{{ persona_type|lower }}-{{ persona_status|lower }}-persona-button"
+            hx-get="{% url 'personas:create-persona' campaign_id=campaign.id persona_type=persona_type %}"
+            hx-trigger="click"
+            hx-target="#{{ persona_type|lower }}-{{ persona_status|lower }}-persona-list-content"
+            hx-swap="afterbegin"
+            onclick="this.disabled = true; closeAllEditors(); window.initEditor({
+                containerId: 'create-{{ persona_type|lower }}-persona-form-editor',
+                textareaId: 'id_description',
+            })"
+            class="inline-flex items-center gap-1 px-2 py-1 rounded text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            aria-label="Add {{ persona_type }} persona"
+        >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-4">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+            </svg>
+        </button>
+        {% endif %}
+    </div>
+
+    <!-- Persona List Content -->
+    <div id="{{ persona_type|lower }}-{{ persona_status|lower }}-persona-list-content" class="space-y-3">
+        {% for persona in personas %}
+            {% include 'personas/_persona.html' with campaign=campaign persona=persona %}
+        {% empty %}
+            <div class="text-center py-8 bg-gray-50 dark:bg-gray-800/50 rounded-lg border-2 border-dashed border-gray-200 dark:border-gray-700">
+                <p class="text-gray-500 dark:text-gray-400">
+                    You don't have any {{ persona_type }} personas yet.
+                </p>
+                {% if persona_type|lower != "member" and persona_status|lower != "retired" %}
+                <button
+                    hx-get="{% url 'personas:create-persona' campaign_id=campaign.id persona_type=persona_type %}"
+                    hx-trigger="click"
+                    hx-target="#{{ persona_type|lower }}-{{ persona_status|lower }}-persona-list-content"
+                    hx-swap="afterbegin"
+                    onclick="this.disabled = true; closeAllEditors(); window.initEditor({
+                        containerId: 'create-{{ persona_type|lower }}-persona-form-editor',
+                        textareaId: 'id_description',
+                    })"
+                    class="mt-3 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium text-indigo-600 hover:text-indigo-700 dark:text-indigo-400 dark:hover:text-indigo-300 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-colors duration-200"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-4">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                    </svg>
+                    Create your first {{ persona_type }}
+                </button>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+</section>
+
+<script>
+    window.closeAllEditors = function() {
+        console.log('Closing all editors');
+        window.initEditor({
+            containerId: null,
+            textareaId: null,
+        })
+        const event = new CustomEvent('closeAllEditors');
+        document.body.dispatchEvent(event);
+    }
+
+    document.addEventListener('htmx:afterRequest', function(evt) {
+        const xhr = evt.detail.xhr;
+        const triggerHeader = xhr.getResponseHeader('HX-Trigger');
+
+        console.log('HX-Trigger header:', triggerHeader);
+
+        if (!triggerHeader) return;
+
+        if (triggerHeader.includes('cancelCreate{{ persona_type.capitalize }}Persona')) {
+            const createPersonaButton = document.getElementById('create-{{ persona_type|lower }}-{{ persona_status|lower }}-persona-button');
+            console.log('Cancel create {{ persona_type }} persona event received.');
+            if (createPersonaButton) {
+                createPersonaButton.disabled = false;
+            }
+        }
+
+        if (triggerHeader.includes('{{ persona_type.lower }}PersonaCreated')) {
+            const createPersonaButton = document.getElementById('create-{{ persona_type|lower }}-{{ persona_status|lower }}-persona-button');
+            console.log('Create {{ persona_type }} persona event received.');
+            if (createPersonaButton) {
+                createPersonaButton.disabled = false;
+            }
+        }
+    });
+</script>
+{#<section id="{{ persona_type|lower }}-{{ persona_status|lower }}-persona-list">#}
+{#    <div class="">#}
+{#        <h3>{{ persona_type|capfirst }} Personas</h3>#}
+{#        {% if persona_type|lower != "member" and persona_status|lower != "retired" %}#}
+{#        <button#}
+{#                id="create-{{ persona_type|lower }}-{{ persona_status|lower }}-persona-button"#}
+{#                hx-get="{% url 'personas:create-persona' campaign_id=campaign.id persona_type=persona_type %}"#}
+{#                hx-trigger="click"#}
+{#                hx-target="#{{ persona_type|lower }}-{{ persona_status|lower }}-persona-list-content"#}
+{#                hx-swap="afterbegin"#}
+{#                onclick="this.disabled = true; closeAllEditors(); window.initEditor({#}
+{#                    containerId: 'create-{{ persona_type|lower }}-persona-form-editor',#}
+{#                    textareaId: 'id_description',#}
+{#                })"#}
+{#                class="float-right disabled:opacity-50"#}
+{#        >#}
+{#            {% comment %} plus Hero Icon {% endcomment %}#}
+{#            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">#}
+{#                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />#}
+{#            </svg>#}
+{#        </button>#}
+{#        {% endif %}#}
+{#    </div>#}
+{#    <div id="{{ persona_type|lower }}-{{ persona_status|lower }}-persona-list-content">#}
+{#        {% for persona in personas %}#}
+{#            {% include 'personas/_persona.html' with campaign=campaign persona=persona %}#}
+{#        {% empty %}#}
+{#            You don't have any {{ persona_type }} personas yet.#}
+{#        {% endfor %}#}
+{#    </div>#}
+{#</section>#}
+{#<script>#}
+{#    window.closeAllEditors = function() {#}
+{#        console.log('Closing all editors');#}
+{#        window.initEditor({#}
+{#            containerId: null,#}
+{#            textareaId: null,#}
+{#        })#}
+{#        const event = new CustomEvent('closeAllEditors');#}
+{#        document.body.dispatchEvent(event);#}
+{#    }#}
+{##}
+{#    document.addEventListener('htmx:afterRequest', function(evt) {#}
+{#        const xhr = evt.detail.xhr;#}
+{#        const triggerHeader = xhr.getResponseHeader('HX-Trigger');#}
+{##}
+{#        console.log('HX-Trigger header:', triggerHeader);#}
+{##}
+{#        if (!triggerHeader) return;#}
+{##}
+{#        if (triggerHeader.includes('cancelCreate{{ persona_type.capitalize }}Persona')) {#}
+{#            const createPersonaButton = document.getElementById('create-{{ persona_type|lower }}-{{ persona_status|lower }}-persona-button');#}
+{#            console.log('Cancel create {{ persona_type }} persona event received.');#}
+{#            createPersonaButton.disabled = false;#}
+{#        }#}
+{##}
+{#        if (triggerHeader.includes('{{ persona_type.lower }}PersonaCreated')) {#}
+{#            const createPersonaButton = document.getElementById('create-{{ persona_type|lower }}-{{ persona_status|lower }}-persona-button');#}
+{#            console.log('Create {{ persona_type }} persona event received.');#}
+{#            createPersonaButton.disabled = false;#}
+{#        }#}
+{#    });#}
+{#</script>#}

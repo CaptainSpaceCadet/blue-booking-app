@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+import os
+import dj_database_url
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -24,9 +26,6 @@ SECRET_KEY = "django-insecure-pu-#^kknj%c=q@(4tt2206tl1qgq^y@kg!5b4q=_d4**4pt1@k
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -46,7 +45,9 @@ INSTALLED_APPS = [
     "allauth.socialaccount.providers.google",
     "allauth.socialaccount.providers.apple",
     "allauth.socialaccount.providers.facebook",
+    "webpack_loader",
     # Custom Apps
+    "apps.core",
     "apps.accounts",
     "apps.campaigns",
     "apps.personas",
@@ -67,6 +68,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django_htmx.middleware.HtmxMiddleware",
     "allauth.account.middleware.AccountMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
 
 if DEBUG:
@@ -88,9 +90,15 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "django.template.context_processors.request",
+                "apps.accounts.context_processors.user_profile",
             ],
         },
     },
+]
+
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
 ]
 
 WSGI_APPLICATION = "blue_booking_app.wsgi.application"
@@ -99,12 +107,25 @@ WSGI_APPLICATION = "blue_booking_app.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+DATABASE_URL = os.environ.get("DATABASE_URL")
+
+if DATABASE_URL:
+    # Production - PostgreSQL
+    DATABASES = {
+        "default": dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
     }
-}
+else:
+    # Development - SQLite
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
 
 
 # Password validation
@@ -142,6 +163,40 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = "static/"
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+    # for WebPack
+    BASE_DIR / "assets",
+    BASE_DIR / "theme" / "static",
+]
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# ASGI
+ASGI_APPLICATION = "blue_booking_app.asgi.application"
 
 # Django-Tailwind
 TAILWIND_APP_NAME = "theme"
+
+# Redirect after login
+LOGIN_REDIRECT_URL = "/dashboard/"
+
+# all-auth
+ACCOUNT_EMAIL_VERIFICATION = "optional"
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+ACCOUNT_SIGNUP_FORM_CLASS = "apps.accounts.forms.CustomSignupForm"
+
+# Web Pack
+WEBPACK_LOADER = {
+    "DEFAULT": {
+        "BUNDLE_DIR_NAME": "webpack_bundles/",
+        "CACHE": not DEBUG,
+        "STATS_FILE": BASE_DIR / "webpack-stats.json",
+        "POLL_INTERVAL": 0.1,
+        "IGNORE": [r".+\.hot-update.js", r".+\.map"],
+    }
+}
+
+# Custom Environmental Variables
+CAMPAIGN_MEMBER_LIMIT = 25  # limit on how many member can a campaign have
+USER_CAMPAIGN_LIMIT = 25  # limit on how many campaigns can a user belong to
+PLAYER_PERSONA_LIMIT = 10  # limit on how many personas a player can have

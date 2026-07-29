@@ -1,0 +1,30 @@
+{% load django_htmx %}
+{% load static tailwind_tags %}
+{% load render_bundle from webpack_loader %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Markdown Editor</title>
+    {% htmx_script %}
+    {% tailwind_css %}
+</head>
+<body hx-headers='{"x-csrftoken": "{{ csrf_token }}"}'>
+
+    <div class="container mx-auto p-6 max-w-4xl">
+        <h1 class="text-2xl font-bold mb-4">Markdown Editor Test</h1>
+
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
+            <!-- The editor container -->
+            <div id="editor"></div>
+        </div>
+
+        <div id="save-result" class="mt-2 text-green-600"></div>
+    </div>
+
+
+    {% render_bundle 'main' 'js' %}
+</body>
+</html>
