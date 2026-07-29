@@ -1,4 +1,4 @@
-# 📘 Blue-Booking Web Application
+# 📘 Blue-Booking Web Application 📘
 
 [Bluebooking](https://thealexandrian.net/wordpress/40005/roleplaying-games/ptolus-running-the-campaign-bluebooking) is a traditional TTRPG technique allowing for role-playing outside of main game sessions. This web application brings that experience online, functioning similarly to a collaborative blogging platform for gaming groups.
 
