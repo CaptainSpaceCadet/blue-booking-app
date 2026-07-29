@@ -612,3 +612,6 @@ vite.config.ts.timestamp-*
 # Additional Stuff
 webpack-stats.json
 assets/webpack_bundles/
+
+# Ignore static files
+staticfiles
