@@ -99,7 +99,7 @@ def create_persona(
 
     # If the request is standard html redirect to the dashboard
     if not request.htmx:
-        return redirect("campaign-page", id=campaign_id)
+        return redirect("campaign-page", campaign_id=campaign_id)
 
     # Handle GET Requests
     if request.method == "GET":
