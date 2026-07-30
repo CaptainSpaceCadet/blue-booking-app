@@ -1,3 +1,4 @@
+{% load markdown_filters %}
 <details id="persona-{{ persona.id }}"{% if open|default:False %} open {% endif %}>
     <summary class="flex items-center justify-between gap-2 cursor-pointer group">
         <span class="flex-1 font-medium">{{ persona.name }}</span>
